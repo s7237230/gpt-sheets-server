@@ -27,12 +27,12 @@ paths:
                   type: object
                   properties:
                     "1": { type: string, example: "רות לוי" }
-                    "2": { type: string }
-                    "3": { type: string }
-                    "4": { type: string }
-                    "5": { type: string }
-                    "6": { type: string }
-                    "9": { type: string }
+                    "2": { type: string, example: "050-1234567" }
+                    "3": { type: string, example: "שיחה" }
+                    "4": { type: string, example: "רוצה למכור נכס" }
+                    "5": { type: string, example: "חם" }
+                    "6": { type: string, example: "לחזור אליו עם הערכה" }
+                    "9": { type: string, example: "2025-04-16" }
 
   /update:
     post:
