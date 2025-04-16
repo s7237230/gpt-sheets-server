@@ -27,12 +27,12 @@ paths:
                   type: object
                   properties:
                     "1": { type: string, example: "רות לוי" }
-                    "2": { type: string, example: "050-1111111" }
-                    "3": { type: string, example: "test@example.com" }
-                    "4": { type: string, example: "בקשה להצעת מחיר" }
-                    "5": { type: string, example: "יצירת קשר טלפוני" }
-                    "6": { type: string, example: "ממתין" }
-                    "9": { type: string, example: "2025-04-16" }
+                    "2": { type: string }
+                    "3": { type: string }
+                    "4": { type: string }
+                    "5": { type: string }
+                    "6": { type: string }
+                    "9": { type: string }
 
   /update:
     post:
@@ -57,12 +57,8 @@ paths:
                 row_data:
                   type: object
                   properties:
-                    "2": { type: string }
-                    "3": { type: string }
-                    "4": { type: string }
-                    "5": { type: string }
-                    "6": { type: string }
-                    "9": { type: string }
+                    "5": { type: string, example: "עבר לטיפול" }
+                    "6": { type: string, example: "לתאם שיחה" }
 
   /delete:
     post:
@@ -90,3 +86,5 @@ components:
       type: apiKey
       in: header
       name: x-api-key
+  schemas: {}
+
