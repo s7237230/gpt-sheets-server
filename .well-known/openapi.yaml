@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   title: Google Sheets Forwarder
   description: API להעברת נתונים לטבלת Google Sheets עם Insert, Update, Delete.
-  version: '1.0.0'
+  version: 1.0.0
 servers:
   - url: https://gpt-sheets-server.onrender.com
 paths:
@@ -24,9 +24,8 @@ paths:
               required:
                 - row_data
       responses:
-        '200':
+        "200":
           description: הצלחה
-
   /update:
     post:
       summary: עדכון שורה קיימת לפי פילטר (עמודה 1)
@@ -50,9 +49,8 @@ paths:
                 - filter
                 - row_data
       responses:
-        '200':
+        "200":
           description: הצלחה
-
   /delete:
     post:
       summary: מחיקת שורה לפי פילטר (עמודה 1)
@@ -71,5 +69,5 @@ paths:
               required:
                 - filter
       responses:
-        '200':
+        "200":
           description: הצלחה
