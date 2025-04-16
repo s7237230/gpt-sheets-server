@@ -2,6 +2,7 @@ const express = require("express");
 const { google } = require("googleapis");
 const cors = require("cors");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
@@ -119,6 +120,15 @@ app.post("/delete", async (req, res) => {
     console.error("Delete error:", err.message);
     res.status(500).send({ success: false, error: err.message });
   }
+});
+
+// ✅ הגשת קבצי פלאגין
+app.get("/.well-known/ai-plugin.json", (req, res) => {
+  res.sendFile(path.join(__dirname, ".well-known", "ai-plugin.json"));
+});
+
+app.get("/.well-known/openapi.yaml", (req, res) => {
+  res.sendFile(path.join(__dirname, ".well-known", "openapi.yaml"));
 });
 
 const port = process.env.PORT || 3000;
