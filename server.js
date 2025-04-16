@@ -8,6 +8,17 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// ✅ אימות עם API KEY
+const API_KEY = process.env.API_KEY || "my-secret-api-key";
+app.use((req, res, next) => {
+  const sentKey = req.headers["x-api-key"];
+  if (!sentKey || sentKey !== API_KEY) {
+    return res.status(401).json({ success: false, message: "Unauthorized: Invalid API Key" });
+  }
+  next();
+});
+
+// 📄 התחברות ל־Google Sheets
 const auth = new google.auth.GoogleAuth({
   credentials: JSON.parse(fs.readFileSync("credentials.json", "utf8")),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -22,6 +33,7 @@ async function getSheetClient() {
   return sheets;
 }
 
+// 📥 Insert Row
 app.post("/insert", async (req, res) => {
   try {
     const { row_data } = req.body;
@@ -44,6 +56,7 @@ app.post("/insert", async (req, res) => {
   }
 });
 
+// 🔁 Update Row
 app.post("/update", async (req, res) => {
   try {
     const { filter, row_data } = req.body;
@@ -80,6 +93,7 @@ app.post("/update", async (req, res) => {
   }
 });
 
+// ❌ Delete Row
 app.post("/delete", async (req, res) => {
   try {
     const { filter } = req.body;
@@ -122,7 +136,7 @@ app.post("/delete", async (req, res) => {
   }
 });
 
-// ✅ הגשת קבצי פלאגין
+// 📦 קבצי פלאגין
 app.get("/.well-known/ai-plugin.json", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "ai-plugin.json"));
 });
