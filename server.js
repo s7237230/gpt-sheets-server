@@ -8,9 +8,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ בדיקת API KEY לפי משתנה סביבה
-const API_KEY = process.env.API_KEY || "my-secret-api-key"; // ברירת מחדל למקרה מקומי
-
+// ✅ אימות API KEY
+const API_KEY = process.env.API_KEY || "my-secret-api-key";
 app.use((req, res, next) => {
   const sentKey = req.header("x-api-key");
   if (!sentKey || sentKey !== API_KEY) {
@@ -19,7 +18,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// ✅ התחברות ל-Google Sheets
+// ✅ חיבור ל־Google Sheets
 const auth = new google.auth.GoogleAuth({
   credentials: JSON.parse(fs.readFileSync("credentials.json", "utf8")),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -120,7 +119,35 @@ app.post("/delete", async (req, res) => {
   }
 });
 
-// ✅ קבצי פלאגין
+// ✅ תמיכה בפורמט הפלאגין דרך /forward
+app.post("/forward", async (req, res) => {
+  const { action, table, row_data, filter } = req.body;
+
+  if (table !== "DB MASTER") {
+    return res.status(400).send({ success: false, message: "Invalid table" });
+  }
+
+  try {
+    switch (action) {
+      case "insert_row":
+        req.body = { row_data };
+        return app._router.handle({ ...req, url: "/insert", method: "POST" }, res);
+      case "update_row":
+        req.body = { filter, row_data };
+        return app._router.handle({ ...req, url: "/update", method: "POST" }, res);
+      case "delete_row":
+        req.body = { filter };
+        return app._router.handle({ ...req, url: "/delete", method: "POST" }, res);
+      default:
+        return res.status(400).send({ success: false, message: "Unknown action" });
+    }
+  } catch (err) {
+    console.error("Forwarding error:", err.message);
+    res.status(500).send({ success: false, error: err.message });
+  }
+});
+
+// ✅ הגשת קבצי פלאגין
 app.get("/.well-known/ai-plugin.json", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "ai-plugin.json"));
 });
@@ -129,6 +156,7 @@ app.get("/.well-known/openapi.yaml", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "openapi.yaml"));
 });
 
+// 🚀 הפעלת השרת
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`🚀 Google Sheets API Server running on port ${port}`);
