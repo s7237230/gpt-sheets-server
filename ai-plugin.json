@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Google Sheets Forwarder",
+  "name_for_model": "sheets_forwarder",
+  "description_for_human": "שליחה אוטומטית של נתונים ל־Google Sheets",
+  "description_for_model": "שולח מידע ל־Webhook מסוג POST עם action, table ו־row_data עבור הזנת נתונים ל־Google Sheets.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://gpt-sheets-server.onrender.com/.well-known/openapi.yaml"
+  },
+  "logo_url": "https://gpt-sheets-server.onrender.com/logo.png",
+  "contact_email": "support@example.com",
+  "legal_info_url": "https://example.com/legal"
+}
