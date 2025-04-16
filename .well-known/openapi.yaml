@@ -16,16 +16,17 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - row_data
               properties:
                 row_data:
                   type: object
                   additionalProperties:
                     type: string
+              required:
+                - row_data
       responses:
         '200':
           description: הצלחה
+
   /update:
     post:
       summary: עדכון שורה קיימת לפי פילטר (עמודה 1)
@@ -36,9 +37,6 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - filter
-                - row_data
               properties:
                 filter:
                   type: object
@@ -48,9 +46,13 @@ paths:
                   type: object
                   additionalProperties:
                     type: string
+              required:
+                - filter
+                - row_data
       responses:
         '200':
           description: הצלחה
+
   /delete:
     post:
       summary: מחיקת שורה לפי פילטר (עמודה 1)
@@ -61,13 +63,13 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - filter
               properties:
                 filter:
                   type: object
                   additionalProperties:
                     type: string
+              required:
+                - filter
       responses:
         '200':
           description: הצלחה
