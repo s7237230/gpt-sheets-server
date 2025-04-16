@@ -3,76 +3,95 @@ info:
   title: Google Sheets Forwarder
   description: API להעברת נתונים לטבלת Google Sheets עם Insert, Update, Delete.
   version: '1.0.0'
+
 servers:
   - url: https://gpt-sheets-server.onrender.com
+
 paths:
   /insert:
     post:
-      summary: הוספת שורה חדשה
+      summary: הוספת שורה חדשה לטבלת Google Sheets
       operationId: insertRow
       security:
-        - ApiKeyAuth: []
+        - api_key: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [row_data]
+              required:
+                - row_data
               properties:
                 row_data:
                   type: object
-                  additionalProperties: true
+                  properties:
+                    "1": { type: string, example: "רות לוי" }
+                    "2": { type: string, example: "050-1111111" }
+                    "3": { type: string, example: "test@example.com" }
+                    "4": { type: string, example: "בקשה להצעת מחיר" }
+                    "5": { type: string, example: "יצירת קשר טלפוני" }
+                    "6": { type: string, example: "ממתין" }
+                    "9": { type: string, example: "2025-04-16" }
       responses:
         '200':
           description: הצלחה
+
   /update:
     post:
-      summary: עדכון שורה
+      summary: עדכון שורה קיימת לפי פילטר (עמודה 1)
       operationId: updateRow
       security:
-        - ApiKeyAuth: []
+        - api_key: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [filter, row_data]
+              required:
+                - filter
+                - row_data
               properties:
                 filter:
                   type: object
-                  additionalProperties: true
+                  properties:
+                    "1": { type: string, example: "רות לוי" }
                 row_data:
                   type: object
-                  additionalProperties: true
+                  properties:
+                    "5": { type: string, example: "עבר לטיפול" }
+                    "6": { type: string, example: "לתאם שיחה" }
       responses:
         '200':
           description: הצלחה
+
   /delete:
     post:
-      summary: מחיקת שורה
+      summary: מחיקת שורה לפי פילטר (עמודה 1)
       operationId: deleteRow
       security:
-        - ApiKeyAuth: []
+        - api_key: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [filter]
+              required:
+                - filter
               properties:
                 filter:
                   type: object
-                  additionalProperties: true
+                  properties:
+                    "1": { type: string, example: "רות לוי" }
       responses:
         '200':
           description: הצלחה
 
 components:
   securitySchemes:
-    ApiKeyAuth:
+    api_key:
       type: apiKey
       in: header
-      name: X-API-Key
+      name: x-api-key
