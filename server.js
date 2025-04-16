@@ -4,21 +4,22 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 
-require("dotenv").config(); // אם צריך גם לוקאלי
-
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ בדיקת API KEY
+// ✅ בדיקת API KEY לפי משתנה סביבה
+const API_KEY = process.env.API_KEY || "my-secret-api-key"; // ברירת מחדל למקרה מקומי
+
 app.use((req, res, next) => {
-  const apiKey = req.header("x-api-key");
-  if (apiKey !== process.env.API_KEY) {
+  const sentKey = req.header("x-api-key");
+  if (!sentKey || sentKey !== API_KEY) {
     return res.status(401).json({ success: false, message: "Unauthorized: Invalid API Key" });
   }
   next();
 });
 
+// ✅ התחברות ל-Google Sheets
 const auth = new google.auth.GoogleAuth({
   credentials: JSON.parse(fs.readFileSync("credentials.json", "utf8")),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -33,6 +34,7 @@ async function getSheetClient() {
   return sheets;
 }
 
+// ✅ Insert
 app.post("/insert", async (req, res) => {
   try {
     const { row_data } = req.body;
@@ -51,6 +53,7 @@ app.post("/insert", async (req, res) => {
   }
 });
 
+// ✅ Update
 app.post("/update", async (req, res) => {
   try {
     const { filter, row_data } = req.body;
@@ -79,6 +82,7 @@ app.post("/update", async (req, res) => {
   }
 });
 
+// ✅ Delete
 app.post("/delete", async (req, res) => {
   try {
     const { filter } = req.body;
@@ -116,9 +120,11 @@ app.post("/delete", async (req, res) => {
   }
 });
 
+// ✅ קבצי פלאגין
 app.get("/.well-known/ai-plugin.json", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "ai-plugin.json"));
 });
+
 app.get("/.well-known/openapi.yaml", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "openapi.yaml"));
 });
