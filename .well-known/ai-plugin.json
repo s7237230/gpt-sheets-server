@@ -1,19 +1,21 @@
 {
   "schema_version": "v1",
-  "name_for_human": "Google Sheets DB",
-  "name_for_model": "gpt-sheets-server",
-  "description_for_human": "נהל נתונים בגוגל שיטס: הוספה, עדכון ומחיקה לפי מזהה",
-  "description_for_model": "עבוד עם גוגל שיטס – שלח נתונים ל־/insert בתוך מפתח row_data.",
+  "name_for_human": "DB GPT MASTER V2",
+  "name_for_model": "db_gpt_master",
+  "description_for_human": "מעדכן טבלת גוגל שיטס חיה אוטומטית לפי לקוחות.",
+  "description_for_model": "API לעדכון טבלת Google Sheets עם Insert, Update, Delete לפי לקוחות.",
   "auth": {
-    "type": "none"
+    "type": "api_key",
+    "authorization_type": "header",
+    "verification_tokens": {},
+    "api_key_name": "x-api-key"
   },
   "api": {
     "type": "openapi",
     "url": "https://gpt-sheets-server.onrender.com/.well-known/openapi.yaml",
-    "is_user_authenticated": false
+    "is_user_authenticated": true
   },
-  "logo_url": "https://yourdomain.com/logo.png",
-  "contact_email": "admin@yourdomain.com",
-  "legal_info_url": "https://yourdomain.com/legal"
+  "logo_url": "https://www.gstatic.com/images/branding/product/2x/sheets_64dp.png",
+  "contact_email": "s7237230@gmail.com",
+  "legal_info_url": "https://app.example.com/privacy"
 }
-
