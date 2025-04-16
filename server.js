@@ -4,21 +4,21 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 
+require("dotenv").config(); // אם צריך גם לוקאלי
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// ✅ אימות עם API KEY
-const API_KEY = process.env.API_KEY || "my-secret-api-key";
+// ✅ בדיקת API KEY
 app.use((req, res, next) => {
-  const sentKey = req.headers["x-api-key"];
-  if (!sentKey || sentKey !== API_KEY) {
+  const apiKey = req.header("x-api-key");
+  if (apiKey !== process.env.API_KEY) {
     return res.status(401).json({ success: false, message: "Unauthorized: Invalid API Key" });
   }
   next();
 });
 
-// 📄 התחברות ל־Google Sheets
 const auth = new google.auth.GoogleAuth({
   credentials: JSON.parse(fs.readFileSync("credentials.json", "utf8")),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
@@ -33,22 +33,17 @@ async function getSheetClient() {
   return sheets;
 }
 
-// 📥 Insert Row
 app.post("/insert", async (req, res) => {
   try {
     const { row_data } = req.body;
     const sheets = await getSheetClient();
-
     const values = Object.values(row_data);
     await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: `${sheetName}!A:I`,
       valueInputOption: "RAW",
-      requestBody: {
-        values: [values],
-      },
+      requestBody: { values: [values] },
     });
-
     res.status(200).send({ success: true });
   } catch (err) {
     console.error("Insert error:", err.message);
@@ -56,36 +51,27 @@ app.post("/insert", async (req, res) => {
   }
 });
 
-// 🔁 Update Row
 app.post("/update", async (req, res) => {
   try {
     const { filter, row_data } = req.body;
     const sheets = await getSheetClient();
-
     const { data } = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: `${sheetName}!A2:I`,
     });
-
     const values = data.values || [];
     const rowIndex = values.findIndex((row) => row[0] === filter["1"]);
-
     if (rowIndex === -1) {
       return res.status(404).send({ success: false, message: "Not found" });
     }
-
     const newRow = Object.values(row_data);
     const targetRange = `${sheetName}!A${rowIndex + 2}:I${rowIndex + 2}`;
-
     await sheets.spreadsheets.values.update({
       spreadsheetId,
       range: targetRange,
       valueInputOption: "RAW",
-      requestBody: {
-        values: [newRow],
-      },
+      requestBody: { values: [newRow] },
     });
-
     res.status(200).send({ success: true });
   } catch (err) {
     console.error("Update error:", err.message);
@@ -93,24 +79,19 @@ app.post("/update", async (req, res) => {
   }
 });
 
-// ❌ Delete Row
 app.post("/delete", async (req, res) => {
   try {
     const { filter } = req.body;
     const sheets = await getSheetClient();
-
     const { data } = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: `${sheetName}!A2:I`,
     });
-
     const values = data.values || [];
     const rowIndex = values.findIndex((row) => row[0] === filter["1"]);
-
     if (rowIndex === -1) {
       return res.status(404).send({ success: false, message: "Not found" });
     }
-
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId,
       requestBody: {
@@ -128,7 +109,6 @@ app.post("/delete", async (req, res) => {
         ],
       },
     });
-
     res.status(200).send({ success: true });
   } catch (err) {
     console.error("Delete error:", err.message);
@@ -136,11 +116,9 @@ app.post("/delete", async (req, res) => {
   }
 });
 
-// 📦 קבצי פלאגין
 app.get("/.well-known/ai-plugin.json", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "ai-plugin.json"));
 });
-
 app.get("/.well-known/openapi.yaml", (req, res) => {
   res.sendFile(path.join(__dirname, ".well-known", "openapi.yaml"));
 });
