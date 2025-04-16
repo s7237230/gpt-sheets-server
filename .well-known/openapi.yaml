@@ -69,4 +69,6 @@ paths:
                   type: object
                   properties:
                     "1": { type: string, example: "רות לוי" }
+components: {}
+security: []
 
