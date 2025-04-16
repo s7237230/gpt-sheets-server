@@ -1,17 +1,19 @@
 {
   "schema_version": "v1",
-  "name_for_human": "Google Sheets Forwarder",
-  "name_for_model": "sheets_forwarder",
-  "description_for_human": "שליחה אוטומטית של נתונים ל־Google Sheets",
-  "description_for_model": "שולח מידע ל־Webhook מסוג POST עם action, table ו־row_data עבור הזנת נתונים ל־Google Sheets.",
+  "name_for_human": "Google Sheets DB",
+  "name_for_model": "gpt-sheets-server",
+  "description_for_human": "נהל נתונים בגוגל שיטס: הוספה, עדכון ומחיקה לפי מזהה",
+  "description_for_model": "עבוד עם גוגל שיטס – שלח נתונים ל־/insert בתוך מפתח row_data.",
   "auth": {
     "type": "none"
   },
   "api": {
     "type": "openapi",
-    "url": "https://gpt-sheets-server.onrender.com/.well-known/openapi.yaml"
+    "url": "https://gpt-sheets-server.onrender.com/.well-known/openapi.yaml",
+    "is_user_authenticated": false
   },
-  "logo_url": "https://gpt-sheets-server.onrender.com/logo.png",
-  "contact_email": "support@example.com",
-  "legal_info_url": "https://example.com/legal"
+  "logo_url": "https://yourdomain.com/logo.png",
+  "contact_email": "admin@yourdomain.com",
+  "legal_info_url": "https://yourdomain.com/legal"
 }
+
