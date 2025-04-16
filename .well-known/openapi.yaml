@@ -3,14 +3,12 @@ info:
   title: Google Sheets Forwarder
   description: API להעברת נתונים לטבלת Google Sheets עם Insert, Update, Delete.
   version: '1.0.0'
-
 servers:
   - url: https://gpt-sheets-server.onrender.com
-
 paths:
   /insert:
     post:
-      summary: הוספת שורה חדשה לטבלת Google Sheets
+      summary: הוספת שורה חדשה
       operationId: insertRow
       security:
         - api_key: []
@@ -25,21 +23,14 @@ paths:
               properties:
                 row_data:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
-                    "2": { type: string, example: "050-1111111" }
-                    "3": { type: string, example: "test@example.com" }
-                    "4": { type: string, example: "בקשה להצעת מחיר" }
-                    "5": { type: string, example: "יצירת קשר טלפוני" }
-                    "6": { type: string, example: "ממתין" }
-                    "9": { type: string, example: "2025-04-16" }
+                  additionalProperties:
+                    type: string
       responses:
         '200':
-          description: הצלחה
-
+          description: success
   /update:
     post:
-      summary: עדכון שורה קיימת לפי פילטר (עמודה 1)
+      summary: עדכון שורה
       operationId: updateRow
       security:
         - api_key: []
@@ -55,20 +46,18 @@ paths:
               properties:
                 filter:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
+                  additionalProperties:
+                    type: string
                 row_data:
                   type: object
-                  properties:
-                    "5": { type: string, example: "עבר לטיפול" }
-                    "6": { type: string, example: "לתאם שיחה" }
+                  additionalProperties:
+                    type: string
       responses:
         '200':
-          description: הצלחה
-
+          description: success
   /delete:
     post:
-      summary: מחיקת שורה לפי פילטר (עמודה 1)
+      summary: מחיקת שורה
       operationId: deleteRow
       security:
         - api_key: []
@@ -83,12 +72,11 @@ paths:
               properties:
                 filter:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
+                  additionalProperties:
+                    type: string
       responses:
         '200':
-          description: הצלחה
-
+          description: success
 components:
   securitySchemes:
     api_key:
