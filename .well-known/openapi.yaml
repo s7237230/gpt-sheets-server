@@ -10,7 +10,7 @@ servers:
 paths:
   /insert:
     post:
-      summary: הוספת שורה חדשה לטבלת Google Sheets
+      summary: הוספת שורה חדשה לטבלה
       operationId: insertRow
       security:
         - api_key: []
@@ -20,23 +20,18 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - row_data
               properties:
                 row_data:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
-                    "2": { type: string, example: "050-1234567" }
-                    "3": { type: string, example: "שיחה" }
-                    "4": { type: string, example: "רוצה למכור נכס" }
-                    "5": { type: string, example: "חם" }
-                    "6": { type: string, example: "לחזור אליו עם הערכה" }
-                    "9": { type: string, example: "2025-04-16" }
+              required:
+                - row_data
+      responses:
+        '200':
+          description: הצלחה
 
   /update:
     post:
-      summary: עדכון שורה קיימת לפי פילטר (עמודה 1)
+      summary: עדכון שורה לפי פילטר (עמודה 1)
       operationId: updateRow
       security:
         - api_key: []
@@ -46,19 +41,17 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - filter
-                - row_data
               properties:
                 filter:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
                 row_data:
                   type: object
-                  properties:
-                    "5": { type: string, example: "עבר לטיפול" }
-                    "6": { type: string, example: "לתאם שיחה" }
+              required:
+                - filter
+                - row_data
+      responses:
+        '200':
+          description: הצלחה
 
   /delete:
     post:
@@ -72,13 +65,54 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - filter
               properties:
                 filter:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
+              required:
+                - filter
+      responses:
+        '200':
+          description: הצלחה
+
+  /forward:
+    post:
+      summary: שליחה גנרית לפי action (insert_row / update_row / delete_row)
+      operationId: forwardWebhook
+      security:
+        - api_key: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  example: insert_row
+                table:
+                  type: string
+                  example: DB MASTER
+                row_data:
+                  type: object
+                  example:
+                    "1": "רות לוי"
+                    "2": "050-1234567"
+                    "3": "שיחה"
+                    "4": "רוצה הצעת מחיר"
+                    "5": "חם"
+                    "6": "לחזור אליה בהקדם"
+                    "9": "2025-04-16"
+                filter:
+                  type: object
+                  example:
+                    "1": "רות לוי"
+              required:
+                - action
+                - table
+      responses:
+        '200':
+          description: הצלחה
 
 components:
   securitySchemes:
