@@ -8,67 +8,71 @@ servers:
 paths:
   /insert:
     post:
-      summary: הוספת שורה חדשה לטבלת Google Sheets
+      summary: הוספת שורה חדשה
       operationId: insertRow
+      security:
+        - ApiKeyAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - row_data
+              required: [row_data]
               properties:
                 row_data:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
-                    "2": { type: string, example: "050-1111111" }
-                    "3": { type: string, example: "test@example.com" }
-                    "4": { type: string, example: "בקשה להצעת מחיר" }
-                    "5": { type: string, example: "יצירת קשר טלפוני" }
-                    "6": { type: string, example: "ממתין" }
-                    "9": { type: string, example: "2025-04-16" }
+                  additionalProperties: true
+      responses:
+        '200':
+          description: הצלחה
   /update:
     post:
-      summary: עדכון שורה קיימת לפי פילטר (עמודה 1)
+      summary: עדכון שורה
       operationId: updateRow
+      security:
+        - ApiKeyAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - filter
-                - row_data
+              required: [filter, row_data]
               properties:
                 filter:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
+                  additionalProperties: true
                 row_data:
                   type: object
-                  properties:
-                    "5": { type: string, example: "עבר לטיפול" }
-                    "6": { type: string, example: "לתאם שיחה" }
+                  additionalProperties: true
+      responses:
+        '200':
+          description: הצלחה
   /delete:
     post:
-      summary: מחיקת שורה לפי פילטר (עמודה 1)
+      summary: מחיקת שורה
       operationId: deleteRow
+      security:
+        - ApiKeyAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - filter
+              required: [filter]
               properties:
                 filter:
                   type: object
-                  properties:
-                    "1": { type: string, example: "רות לוי" }
-components: {}
-security: []
+                  additionalProperties: true
+      responses:
+        '200':
+          description: הצלחה
 
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
